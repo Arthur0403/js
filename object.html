@@ -8,6 +8,33 @@
 </head>
 <script>
     "use strict";
+
+    const obj1 = new Object(); //for OOP
+
+    const obj2 = {
+        manufacturer: 'black',
+        color: 'black'
+    };
+
+    console.log(obj2.manufacturer); 
+    // or 
+    console.log(obj2['manufacturer']);
+
+    //for example
+    const colorProperty = 'color'; //key in variable
+    console.log(obj2['color']);//value from obj
+
+    const myCar = {
+        manufacturer: 'BMW',
+        color: 'black'
+    };
+
+    myCar.weigth = 2000;
+    console.log(myCar);
+    console.log(myCar.weigth);
+    console.log(myCar.color);
+    console.log(myCar.manufacturer);
+ 
 </script>
 <body>
     
