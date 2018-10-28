@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script>
+    "use strict";
+
+    const settings = {
+        rowsCount: 10,
+        colsCount: 10,
+        startPositionX: 0,
+        startPositionY: 0,
+    };
+
+    const player = {
+        x: null,
+        y: null,
+
+        init(startX, startY) {
+            this.x = startX;
+            this.y = startY;
+        },
+
+        move(direction) {
+            switch (direction) {
+                case 2:
+                    this.y++;
+                    break;
+                case 4:
+                    this.x--;
+                    break;
+                case 6:
+                    this.x++;
+                    break;
+                case 8:
+                    this.y--;
+                    break;
+            }
+        },
+    };
+
+    const game = {
+        settings: settings,
+        player: player,
+
+        run() {
+            this.player.init(this.settings.startPositionX, this.settings.startPositionY);
+            while (true) {
+                this.render();
+
+                const direction = this.getDirection();
+
+                if (direction === -1) {
+                    return alert('До свидания');
+                }
+
+                this.player.move(direction);
+            }
+        },
+
+        render() {
+            let map = "";
+
+            for (let row = 0; row < this.settings.rowsCount; row++) {
+                for (let col = 0; col < this.settings.colsCount; col++) {
+                    if (this.player.y === row && this.player.x === col) {
+                        map += '0';
+                    } else {
+                        map += 'x';
+                    }
+
+                }
+
+                map += '\n'
+            }
+            console.clear();
+            console.log(map);
+        },
+
+        getDirection() {
+            const availableDirections = [-1, 2, 4, 6, 8];
+
+            while (true) {
+                const direction = parseInt(prompt('Введите число куда вы хотите переместиться, -1 для выхода'));
+
+                if (!availableDirections.includes(direction)) {
+                    alert(`Для перемещения нужно ввести одно из чисел: ${availableDirections.join(', ')}.`)//join - создает строку из массива
+                    continue;
+                }
+
+                return direction;
+            }
+        },
+    };
+
+    game.run();
+
+</script>
+
+<body>
+
+</body>
+
+</html>
