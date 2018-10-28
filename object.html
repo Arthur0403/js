@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Object js</title>
+    <title>Object js & OOP</title>
 </head>
 <script>
     "use strict";
@@ -13,30 +14,178 @@
 
     const obj2 = {
         manufacturer: 'black',
-        color: 'black'
+        color: 'black',
+
     };
 
-    console.log(obj2.manufacturer); 
+    // console.log(obj2.manufacturer); 
     // or 
-    console.log(obj2['manufacturer']);
+    // console.log(obj2['manufacturer']);
 
     //for example
     const colorProperty = 'color'; //key in variable
-    console.log(obj2['color']);//value from obj
+    // console.log(obj2['color']);//value from obj
+
+    function toBeep() {
+        console.log('Машина подает сигнал2');
+    };
 
     const myCar = {
         manufacturer: 'BMW',
-        color: 'black'
+        color: 'black',
+        possibleColors: ['red', 'green', 'blue'], //array
+        engine: {
+            engineCode: 'a58', //object inner
+            power: 80,
+        },
+        beep: function () {
+            console.log('Машина подает сигнал');//variant one
+        },
+        beepTwo: toBeep,//variant two
+        beepThree() {
+            console.log('Машина подает сигнал3');//variant one
+        }
     };
 
     myCar.weigth = 2000;
-    console.log(myCar);
-    console.log(myCar.weigth);
-    console.log(myCar.color);
-    console.log(myCar.manufacturer);
- 
+    // console.log(myCar);
+    // console.log(myCar.weigth);
+    // console.log(myCar.color);
+    // console.log(myCar.manufacturer);
+    // console.log(myCar);
+    // myCar.beepThree();
+    // console.log(myCar.possibleColors[2]);
+    // console.log(myCar.engine.power);
+
+    // for (let i = 0; i < myCar.possibleColors.length; i++){
+    //     console.log(`Возможный цвет машины: ${myCar.possibleColors[i]}`);
+    // }
+
+    //пробегаемся по всем свойствам объекта. Во внутренние свойства engine не заглянет. 
+    //for in перебирает ключи
+    // for (const prop in myCar) {
+    //     console.log(`В объекте есть свойства: ${prop}`);
+    // }
+    //or - we get array
+    console.log(Object.keys(myCar)); //можно использовать getOwnPropertyNames
+
+    //for of перебирает значения
+    for (const prop of Object.keys(myCar)) {
+        console.log(`В объекте есть свойства: ${prop}`);
+    }
+
+
+
+
+    //OOP EcmaScript 5 (menu)
+
+    //реализуем класс через функцию конструктор
+    function Container() { //базовый класс отвечающий за рендеринг
+
+        var param = '1' //снаружи ее нельзя получить, доступна только внутри класса
+        this.tagName = 'div'; //this.tagName = Container.tagName
+        this.className = 'container';
+        this.id = 'container';
+
+        //объявление публичного метода, так стоит делать, если нужно использовать приватное свойство внутри функции, в данном случае param
+        //в каждом экземпляре этого класса будет копия метода
+        //в остальных случаях через прототип
+        // this.render = function () {
+
+        // }
+
+    };
+    //к приватным свойствам получить доступ нельзя
+    //так как два метода рендер вызовится внутри класса
+    Container.prototype.render = function () {
+        var element = document.createElement(this.tagName);
+        element.id = this.id;
+        element.className = this.className;
+        return element;        
+    }
+
+    // var div = new Container(); //таким образом создали новый экземпляр класса - объект
+    // // div.tagName //так обратились
+    // // div.tagName = 'ul'; //а так переопределили
+    // div.render()
+
+    //создание дочернего класса
+    function Menu(className, id, items) {
+        //наследование:
+        Container.call(this); //унаследовали все от класса контейнер
+        //переопределим публичные свойства
+        this.tagName = 'ul';
+        this.className = className;
+        this.id = id;
+        this.items = items;
+    }
+
+    //Наследование методов из прототипа
+    Menu.prototype = Object.create(Container.prototype);
+    //Переопределяем рендер (полиморфизм)
+    Menu.prototype.render = function(){
+        var menu = document.createElement(this.tagName);
+        menu.className = this.className;
+        menu.id = this.id;
+
+        this.items.forEach(function(item){
+            if(item instanceof MenuItem){ //проверка
+            menu.appendChild(item.render());
+            }
+        });
+
+        return menu;
+    }
+
+    function MenuItem(href, title){
+        Container.call(this);
+
+        this.className = 'menu-item';
+        this.href = href;
+        this.title = title;
+        this.tagName = 'li'
+
+    }
+
+    MenuItem.prototype = Object.create(Container.prototype);
+    MenuItem.prototype.render = function(){
+        var li = document.createElement(this.tagName);
+        li.className = this.className;
+
+        var link = document.createElement('a');
+        link.href = this.href;
+        link.textContent = this.title;
+
+        li.appendChild(link);
+
+        return li;
+
+    }
+
+    window.onload = function(){
+
+        //создаем пункты меню
+    var items = [
+        new MenuItem('https://geekbrains.ru', 'Home'),
+        new MenuItem('https://geekbrains.ru', 'News'),
+        new MenuItem('https://geekbrains.ru', 'Blog'),
+    ]
+
+    //создаем меню
+    var menu = new Menu('menu', 'menu', items);
+
+    //render
+    document.body.appendChild(menu.render());
+
+    }
+
+
+
+
 </script>
+
 <body>
-    
+
 </body>
+
 </html>
